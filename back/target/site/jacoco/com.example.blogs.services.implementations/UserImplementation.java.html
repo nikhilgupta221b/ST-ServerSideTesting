@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserImplementation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blogs</a> &gt; <a href="index.source.html" class="el_package">com.example.blogs.services.implementations</a> &gt; <span class="el_source">UserImplementation.java</span></div><h1>UserImplementation.java</h1><pre class="source lang-java linenums">package com.example.blogs.services.implementations;
+
+import com.example.blogs.Repositories.UserRepository;
+import com.example.blogs.entities.Role;
+import com.example.blogs.entities.User;
+import com.example.blogs.payloads.UserDto;
+import com.example.blogs.services.UserService;
+import com.example.blogs.exceptions.ResourceNotFoundException;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.example.blogs.entities.Role.USER;
+
+@Service
+<span class="fc" id="L22">public class UserImplementation implements UserService {</span>
+
+<span class="fc" id="L24">    private static final Logger logger = LogManager.getLogger(UserImplementation.class);</span>
+
+    @Autowired
+    private UserRepository userRepo;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDto registerNewUser(UserDto userDto) {
+<span class="fc" id="L37">        User user = this.modelMapper.map(userDto, User.class);</span>
+
+        // encode the password
+<span class="fc" id="L40">        user.setPassword(this.passwordEncoder.encode(user.getPassword()));</span>
+
+        // set role
+<span class="fc" id="L43">        user.setRole(USER);</span>
+
+<span class="fc" id="L45">        User newUser = this.userRepo.save(user);</span>
+<span class="fc" id="L46">        logger.info(&quot;New user registered successfully: &quot; + user.getEmail());</span>
+<span class="fc" id="L47">        return this.modelMapper.map(newUser, UserDto.class);</span>
+    }
+
+    @Override
+    public UserDto createUser(UserDto userDto) {
+<span class="fc" id="L52">        User user = this.dtoToUser(userDto);</span>
+<span class="fc" id="L53">        User savedUser = this.userRepo.save(user);</span>
+<span class="fc" id="L54">        logger.info(&quot;User created successfully: &quot; + savedUser.getEmail());</span>
+<span class="fc" id="L55">        return this.userToDto(savedUser);</span>
+    }
+
+    @Override
+    public UserDto updateUser(UserDto userDto, Integer userId) {
+<span class="fc" id="L60">        User user = this.userRepo.findById(userId).orElseThrow(() -&gt; new ResourceNotFoundException(&quot;User&quot;, &quot;Id&quot;, userId));</span>
+<span class="fc" id="L61">        user.setName(userDto.getName());</span>
+<span class="fc" id="L62">        user.setEmail(userDto.getEmail());</span>
+<span class="fc" id="L63">        user.setAbout(userDto.getAbout());</span>
+<span class="fc" id="L64">        user.setPassword(userDto.getPassword());</span>
+
+<span class="fc" id="L66">        User updatedUser = this.userRepo.save(user);</span>
+<span class="fc" id="L67">        logger.info(&quot;User updated successfully: &quot; + updatedUser.getEmail());</span>
+<span class="fc" id="L68">        return this.userToDto(updatedUser);</span>
+    }
+
+    @Override
+    public UserDto getUserById(Integer userId) {
+<span class="fc" id="L73">        User user = this.userRepo.findById(userId).orElseThrow(() -&gt; new ResourceNotFoundException(&quot;User&quot;, &quot;Id&quot;, userId));</span>
+<span class="fc" id="L74">        logger.info(&quot;User retrieved successfully with ID: &quot; + userId);</span>
+<span class="fc" id="L75">        return this.userToDto(user);</span>
+    }
+
+    @Override
+    public List&lt;UserDto&gt; getAllUsers() {
+<span class="fc" id="L80">        List&lt;User&gt; users = this.userRepo.findAll();</span>
+<span class="fc" id="L81">        List&lt;UserDto&gt; userDtos = users.stream().map(this::userToDto).collect(Collectors.toList());</span>
+<span class="fc" id="L82">        logger.info(&quot;All users retrieved successfully&quot;);</span>
+<span class="fc" id="L83">        return userDtos;</span>
+    }
+
+    @Override
+    public void deleteUser(Integer userId) {
+<span class="fc" id="L88">        User user = this.userRepo.findById(userId).orElseThrow(() -&gt; new ResourceNotFoundException(&quot;User&quot;, &quot;Id&quot;, userId));</span>
+<span class="fc" id="L89">        this.userRepo.delete(user);</span>
+<span class="fc" id="L90">        logger.info(&quot;User deleted successfully with ID: &quot; + userId);</span>
+<span class="fc" id="L91">    }</span>
+
+    @Override
+    public User findByUsername(String username) {
+<span class="fc" id="L95">        User user = userRepo.findByEmail(username);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (user == null) {</span>
+<span class="fc" id="L97">            throw new ResourceNotFoundException(&quot;User&quot;, &quot;email&quot;, username);</span>
+        }
+<span class="fc" id="L99">        logger.info(&quot;User found by username: &quot; + username);</span>
+<span class="fc" id="L100">        return user;</span>
+    }
+
+    private User dtoToUser(UserDto userDto) {
+<span class="fc" id="L104">        User user = this.modelMapper.map(userDto, User.class);</span>
+<span class="fc" id="L105">        logger.debug(&quot;Converted UserDto to User: &quot; + userDto.getEmail());</span>
+<span class="fc" id="L106">        return user;</span>
+    }
+
+    public UserDto userToDto(User user) {
+<span class="fc" id="L110">        UserDto userDto = this.modelMapper.map(user, UserDto.class);</span>
+<span class="fc" id="L111">        logger.debug(&quot;Converted User to UserDto: &quot; + user.getEmail());</span>
+<span class="fc" id="L112">        return userDto;</span>
+    }
+
+    public List&lt;User&gt; getAdminList() {
+<span class="fc" id="L116">        List&lt;User&gt; admins = userRepo.getAdmins(Role.ADMIN);</span>
+<span class="fc" id="L117">        logger.info(&quot;Admin list retrieved successfully&quot;);</span>
+<span class="fc" id="L118">        return admins;</span>
+    }
+
+    public void addUser(User user) {
+<span class="fc" id="L122">        user.setPassword(passwordEncoder.encode(user.getPassword()));</span>
+<span class="fc" id="L123">        userRepo.save(user);</span>
+<span class="fc" id="L124">        logger.info(&quot;User added successfully: &quot; + user.getEmail());</span>
+<span class="fc" id="L125">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

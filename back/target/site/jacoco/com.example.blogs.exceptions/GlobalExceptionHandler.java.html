@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blogs</a> &gt; <a href="index.source.html" class="el_package">com.example.blogs.exceptions</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.example.blogs.exceptions;
+
+import com.example.blogs.payloads.ApiResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import java.util.Map;
+import java.util.HashMap;
+@ControllerAdvice
+<span class="fc" id="L14">public class GlobalExceptionHandler {</span>
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity&lt;ApiResponse&gt; resourceNotFoundExceptionHandler(ResourceNotFoundException ex){
+<span class="nc" id="L17">        String message=ex.getMessage();</span>
+<span class="nc" id="L18">        ApiResponse apiResponse= new ApiResponse(message, false);</span>
+<span class="nc" id="L19">        return new ResponseEntity&lt;ApiResponse&gt;(apiResponse, HttpStatus.NOT_FOUND);</span>
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;Map&lt;String,String&gt;&gt; handleMethodArgsNotValidException(MethodArgumentNotValidException ex){
+<span class="nc" id="L24">        Map&lt;String,String&gt; resp=new HashMap&lt;&gt;();</span>
+<span class="nc" id="L25">        ex.getBindingResult().getAllErrors().forEach((error)-&gt;{</span>
+<span class="nc" id="L26">            String fieldName=((FieldError) error).getField();</span>
+<span class="nc" id="L27">            String message=error.getDefaultMessage();</span>
+<span class="nc" id="L28">            resp.put(fieldName,message);</span>
+<span class="nc" id="L29">        });</span>
+<span class="nc" id="L30">        return new ResponseEntity&lt;Map&lt;String,String&gt;&gt;(resp, HttpStatus.BAD_REQUEST);</span>
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity&lt;ApiResponse&gt; handleApiException(ApiException ex) {
+<span class="nc" id="L35">        String message = ex.getMessage();</span>
+<span class="nc" id="L36">        ApiResponse apiResponse = new ApiResponse(message, true);</span>
+<span class="nc" id="L37">        return new ResponseEntity&lt;ApiResponse&gt;(apiResponse, HttpStatus.BAD_REQUEST);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomUserDetailService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blogs</a> &gt; <a href="index.source.html" class="el_package">com.example.blogs.security</a> &gt; <span class="el_source">CustomUserDetailService.java</span></div><h1>CustomUserDetailService.java</h1><pre class="source lang-java linenums">package com.example.blogs.security;
+
+import com.example.blogs.Repositories.UserRepository;
+//import com.example.blogs.entities.User;
+import com.example.blogs.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="fc" id="L13">public class CustomUserDetailService implements UserDetailsService {</span>
+    @Autowired
+    private UserRepository userRepo;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        //User user=this.userRepo.findByEmail(username).orElseThrow(()-&gt;new ResourceNotFoundException(&quot;User&quot;,&quot;email: &quot;+username,0));
+        //return user;
+<span class="nc" id="L21">        return userRepo.findByEmail(username);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

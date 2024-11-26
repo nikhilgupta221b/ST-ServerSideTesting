@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blogs</a> &gt; <a href="index.source.html" class="el_package">com.example.blogs.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package com.example.blogs.config;
+
+import com.example.blogs.security.CustomUserDetailService;
+import com.example.blogs.security.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+<span class="fc" id="L28">public class SecurityConfig {</span>
+
+<span class="fc" id="L30">    public static final String[] PUBLIC_URLS = {</span>
+        &quot;/api/v1/auth/**&quot;,
+        &quot;/v3/api-docs&quot;,
+        &quot;/v2/api-docs&quot;,
+        &quot;/swagger-resources/**&quot;,
+        &quot;/swagger-ui/**&quot;,
+        &quot;/webjars/**&quot;
+    };
+
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+<span class="fc" id="L47">        http</span>
+<span class="fc" id="L48">            .cors().and() // Enable CORS</span>
+<span class="fc" id="L49">            .csrf().disable()</span>
+<span class="fc" id="L50">            .authorizeHttpRequests(authorize -&gt; authorize</span>
+<span class="fc" id="L51">                .requestMatchers(PUBLIC_URLS).permitAll()</span>
+<span class="fc" id="L52">                .requestMatchers(HttpMethod.GET).permitAll()</span>
+<span class="fc" id="L53">                .anyRequest().authenticated()</span>
+            )
+<span class="fc" id="L55">            .sessionManagement(session -&gt; session</span>
+<span class="fc" id="L56">                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)</span>
+            )
+<span class="fc" id="L58">            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);</span>
+
+<span class="fc" id="L60">        return http.build();</span>
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+<span class="fc" id="L65">        return new BCryptPasswordEncoder();</span>
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration configuration) throws Exception {
+<span class="fc" id="L70">        return configuration.getAuthenticationManager();</span>
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+<span class="fc" id="L75">        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();</span>
+<span class="fc" id="L76">        CorsConfiguration config = new CorsConfiguration();</span>
+<span class="fc" id="L77">        config.setAllowCredentials(true);</span>
+//        config.addAllowedOrigin(&quot;*&quot;); // Use specific origins in production
+<span class="fc" id="L79">        config.setAllowedOriginPatterns(Arrays.asList(</span>
+                &quot;http://localhost:3000&quot;, // Replace with specific frontend origins
+                &quot;https://example.com&quot; // Replace with production domain
+        ));
+<span class="fc" id="L83">        config.addAllowedHeader(&quot;*&quot;);</span>
+<span class="fc" id="L84">        config.addAllowedMethod(&quot;*&quot;);</span>
+<span class="fc" id="L85">        source.registerCorsConfiguration(&quot;/**&quot;, config);</span>
+<span class="fc" id="L86">        return new CorsFilter(source);</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

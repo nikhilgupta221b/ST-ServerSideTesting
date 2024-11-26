@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CategoryImplementation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blogs</a> &gt; <a href="index.source.html" class="el_package">com.example.blogs.services.implementations</a> &gt; <span class="el_source">CategoryImplementation.java</span></div><h1>CategoryImplementation.java</h1><pre class="source lang-java linenums">package com.example.blogs.services.implementations;
+
+import com.example.blogs.Repositories.CategoryRepository;
+import com.example.blogs.entities.Category;
+import com.example.blogs.exceptions.ResourceNotFoundException;
+import com.example.blogs.services.CategoryService;
+import com.example.blogs.payloads.CategoryDto;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+<span class="fc" id="L16">public class CategoryImplementation implements CategoryService {</span>
+    @Autowired
+    private CategoryRepository categoryRepo;
+
+    @Autowired
+    private ModelMapper modelMapper;
+    @Override
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+<span class="fc" id="L24">        Category cat=this.modelMapper.map(categoryDto, Category.class);</span>
+<span class="fc" id="L25">        Category addedCat = this.categoryRepo.save(cat);</span>
+<span class="fc" id="L26">        return this.modelMapper.map(addedCat, CategoryDto.class);</span>
+    }
+
+    @Override
+    public CategoryDto updateCategory(CategoryDto categoryDto, Integer categoryId) {
+<span class="fc" id="L31">        Category cat= this.categoryRepo.findById(categoryId).orElseThrow(()-&gt; new ResourceNotFoundException(&quot;Category&quot;, &quot;Category Id&quot;, categoryId));</span>
+<span class="fc" id="L32">        cat.setCategoryTitle(categoryDto.getCategoryTitle());</span>
+<span class="fc" id="L33">        cat.setCategoryDescription(categoryDto.getCategoryDescription());</span>
+<span class="fc" id="L34">        Category updatedcat= this.categoryRepo.save(cat);</span>
+<span class="fc" id="L35">        return this.modelMapper.map(updatedcat, CategoryDto.class);</span>
+    }
+
+    @Override
+    public void deleteCategory(Integer categoryId) {
+<span class="fc" id="L40">        Category cat=this.categoryRepo.findById(categoryId).orElseThrow(()-&gt; new ResourceNotFoundException(&quot;Category&quot;, &quot;Category Id&quot;, categoryId));</span>
+<span class="fc" id="L41">        this.categoryRepo.delete(cat);</span>
+
+<span class="fc" id="L43">    }</span>
+
+    @Override
+    public CategoryDto getCategory(Integer categoryId) {
+<span class="fc" id="L47">        Category cat=this.categoryRepo.findById(categoryId).orElseThrow(()-&gt; new ResourceNotFoundException(&quot;Category&quot;, &quot;Category Id&quot;, categoryId));</span>
+
+<span class="fc" id="L49">        return this.modelMapper.map(cat, CategoryDto.class);</span>
+    }
+
+    @Override
+    public List&lt;CategoryDto&gt; getCategories() {
+<span class="fc" id="L54">        List&lt;Category&gt; categories=this.categoryRepo.findAll();</span>
+<span class="fc" id="L55">        List&lt;CategoryDto&gt; catDtos=categories.stream().map((cat)-&gt;this.modelMapper.map(cat,CategoryDto.class)).collect(Collectors.toList());</span>
+<span class="fc" id="L56">        return catDtos;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blogs</a> &gt; <a href="index.source.html" class="el_package">com.example.blogs.entities</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">//package com.example.blogs.entities;
+//
+//import jakarta.persistence.*;
+//import lombok.Getter;
+//import lombok.NoArgsConstructor;
+//import lombok.Setter;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.userdetails.UserDetails;
+//
+//import java.util.*;
+//import java.util.stream.Collectors;
+//
+//@Entity
+//@Table(name=&quot;users&quot;)
+//@NoArgsConstructor
+//@Getter
+//@Setter
+//public class User implements UserDetails {
+//
+//   @Id
+//   @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private int id;
+//   @Column(name=&quot;user_name&quot;, nullable=false, length=100)
+//   private String name;
+//    private String email;
+//    private String password;
+//    private String about;
+//
+//    @OneToMany(mappedBy = &quot;user&quot;, cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List&lt;Post&gt; posts=new ArrayList&lt;&gt;();
+//
+//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinTable(name=&quot;user_role&quot;,joinColumns = @JoinColumn(name=&quot;user&quot;,referencedColumnName = &quot;id&quot;),inverseJoinColumns = @JoinColumn(name=&quot;role&quot;, referencedColumnName = &quot;id&quot;))
+//    private Set&lt;Role&gt; roles=new HashSet&lt;&gt;();
+//
+//
+////    @Enumerated(value = EnumType.STRING)
+////    private Role role;
+//
+//    @Override
+//    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+//        List&lt;SimpleGrantedAuthority&gt; authorities=this.roles.stream().map((role)-&gt;new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+//        return authorities;
+//    }
+//
+//    @Override
+//    public String getUsername() {
+//        return this.email;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return true;
+//    }
+//}
+package com.example.blogs.entities;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Entity
+@Table(name=&quot;users&quot;)
+<span class="fc" id="L87">@NoArgsConstructor</span>
+<span class="nc" id="L88">@AllArgsConstructor</span>
+@Getter
+<span class="pc" id="L90">@Setter</span>
+public class User implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+<span class="fc" id="L95">    private int id;</span>
+
+    @Column(name=&quot;user_name&quot;, nullable=false, length=100)
+<span class="fc" id="L98">    private String name;</span>
+
+<span class="fc" id="L100">    private String email;</span>
+<span class="fc" id="L101">    private String password;</span>
+<span class="nc" id="L102">    private String about;</span>
+
+<span class="pc" id="L104">    @OneToMany(mappedBy = &quot;user&quot;, cascade=CascadeType.ALL, fetch = FetchType.LAZY)</span>
+<span class="nc" id="L105">    private List&lt;Post&gt; posts=new ArrayList&lt;&gt;();</span>
+
+    //@ManyToOne(fetch = FetchType.EAGER)
+    //@JoinColumn(name = &quot;role_id&quot;, referencedColumnName = &quot;id&quot;)
+    //private String role;
+
+    @Enumerated(value = EnumType.STRING)
+<span class="nc" id="L112">    private Role role;</span>
+
+    // other UserDetails methods...
+
+//    @Override
+//    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+//        List&lt;SimpleGrantedAuthority&gt; authorities = Collections.singletonList(new SimpleGrantedAuthority(getRole()));
+//        return authorities;
+//    }
+
+
+    @Override
+    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+<span class="nc" id="L125">        return role.getUserAuthorities();</span>
+    }
+
+    @Override
+    public String getUsername() {
+<span class="nc" id="L130">        return this.email;</span>
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+<span class="nc" id="L135">        return true;</span>
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+<span class="nc" id="L140">        return true;</span>
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+<span class="nc" id="L145">        return true;</span>
+    }
+
+    @Override
+    public boolean isEnabled() {
+<span class="nc" id="L150">        return true;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

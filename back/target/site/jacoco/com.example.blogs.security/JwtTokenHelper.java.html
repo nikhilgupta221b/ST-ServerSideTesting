@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtTokenHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blogs</a> &gt; <a href="index.source.html" class="el_package">com.example.blogs.security</a> &gt; <span class="el_source">JwtTokenHelper.java</span></div><h1>JwtTokenHelper.java</h1><pre class="source lang-java linenums">package com.example.blogs.security;
+
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+@Component
+<span class="fc" id="L20">public class JwtTokenHelper {</span>
+    /*public static final long JWT_TOKEN_VALIDITY=5*60*60;
+    private String secret=&quot;jwtTokenKey&quot;;
+
+    public String getUsernameFromToken(String token){
+        return getClaimFromToken(token,Claims::getSubject);
+    }
+
+    public Date getExpirationDateFromToken(String token){
+        return getClaimFromToken(token,Claims::getExpiration);
+    }
+
+    public &lt;T&gt; T getClaimFromToken(String token, Function&lt;Claims,T&gt; claimsResolver ){
+        final Claims claims=getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims getAllClaimsFromToken(String token){
+        return Jwts.parser().setSigningKey(secret).build().parseClaimsJws(token).getBody();
+    }
+
+    private Boolean isTokenExpired(String token){
+        final Date expiration=getExpirationDateFromToken(token);
+        return expiration.before(new Date());
+    }
+
+    public String generateToken(UserDetails userDetails){
+        Map&lt;String,Object&gt; claims=new HashMap&lt;&gt;();
+        return doGenerateToken(claims,userDetails.getUsername());
+    }
+
+    private String doGenerateToken(Map&lt;String, Object&gt; claims, String subject) {
+
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .signWith(SignatureAlgorithm.HS512, secret).compact();
+    }
+
+    //validate token
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final String username = getUsernameFromToken(token);
+        return (username.equals(userDetails.getUsername()) &amp;&amp; !isTokenExpired(token));
+    }*/
+
+<span class="fc" id="L64">    private final String SECRET_KEY = &quot;e3cbac02bbf968f70eba5f5dea3634f7887e0bf621abbf6ff2b2bb4b0da48561&quot;;</span>
+
+    public String extractEmail(String token) {
+<span class="nc" id="L67">        return extractClaims(token, Claims::getSubject);</span>
+    }
+
+    public boolean isValid(String token, UserDetails login) {
+<span class="nc" id="L71">        String email = extractEmail(token);</span>
+<span class="nc bnc" id="L72" title="All 4 branches missed.">        return (email.equals(login.getUsername())) &amp;&amp; !isTokenExpired(token);</span>
+    }
+
+    private boolean isTokenExpired(String token) {
+<span class="nc" id="L76">        return extractExpiration(token).before(new Date());</span>
+    }
+
+    private Date extractExpiration(String token) {
+<span class="nc" id="L80">        return extractClaims(token, Claims::getExpiration);</span>
+    }
+
+    public &lt;T&gt; T extractClaims(String token, Function&lt;Claims, T&gt; resolver) {
+<span class="nc" id="L84">        Claims claims = extractAllClaims(token);</span>
+<span class="nc" id="L85">        return resolver.apply(claims);</span>
+    }
+
+    private Claims extractAllClaims(String token) {
+<span class="nc" id="L89">        return Jwts</span>
+<span class="nc" id="L90">                .parser()</span>
+<span class="nc" id="L91">                .verifyWith(getSignKey())</span>
+<span class="nc" id="L92">                .build()</span>
+<span class="nc" id="L93">                .parseSignedClaims(token)</span>
+<span class="nc" id="L94">                .getPayload();</span>
+    }
+
+    public String generateToken(String email) {
+        String token = Jwts
+<span class="nc" id="L99">                .builder()</span>
+<span class="nc" id="L100">                .subject(email)</span>
+<span class="nc" id="L101">                .issuedAt(new Date(System.currentTimeMillis()))</span>
+<span class="nc" id="L102">                .expiration(new Date (System.currentTimeMillis()+ 5 * 60 * 60 * 1000 ))</span>
+<span class="nc" id="L103">                .signWith(getSignKey())</span>
+<span class="nc" id="L104">                .compact();</span>
+
+<span class="nc" id="L106">        return token;</span>
+    }
+
+    private SecretKey getSignKey(){
+<span class="nc" id="L110">        byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);</span>
+<span class="nc" id="L111">        return Keys.hmacShaKeyFor(keyBytes);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

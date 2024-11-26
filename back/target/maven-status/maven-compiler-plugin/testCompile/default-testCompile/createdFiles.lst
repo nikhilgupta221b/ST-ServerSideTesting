@@ -1,0 +1,6 @@
+com\example\blogs\services\FileServiceTest.class
+com\example\blogs\services\CommentServiceTest.class
+com\example\blogs\services\PostServiceTest.class
+com\example\blogs\BlogsApplicationTests.class
+com\example\blogs\services\CategoryServiceTest.class
+com\example\blogs\services\UserServiceTest.class

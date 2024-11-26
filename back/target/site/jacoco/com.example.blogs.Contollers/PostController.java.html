@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PostController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">blogs</a> &gt; <a href="index.source.html" class="el_package">com.example.blogs.Contollers</a> &gt; <span class="el_source">PostController.java</span></div><h1>PostController.java</h1><pre class="source lang-java linenums">package com.example.blogs.Contollers;
+
+import com.example.blogs.config.AppConstants;
+import com.example.blogs.entities.Post;
+import com.example.blogs.payloads.ApiResponse;
+import com.example.blogs.payloads.PostDto;
+import com.example.blogs.payloads.PostResponse;
+import com.example.blogs.services.FileService;
+import com.example.blogs.services.PostService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/v1/&quot;)
+<span class="fc" id="L27">public class PostController {</span>
+
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private FileService fileService;
+    @Value(&quot;${project.image}&quot;)
+    private String path;
+
+    @PostMapping(&quot;/user/{userId}/category/{categoryId}/posts&quot;)
+    public ResponseEntity&lt;PostDto&gt; createPost(@RequestBody PostDto postDto, @PathVariable Integer userId, @PathVariable Integer categoryId){
+<span class="nc" id="L38">        PostDto createPost=this.postService.createPost(postDto,userId,categoryId);</span>
+<span class="nc" id="L39">        return new ResponseEntity&lt;PostDto&gt;(createPost, HttpStatus.CREATED);</span>
+    }
+
+    @PutMapping(&quot;/posts/{postId}&quot;)
+    public ResponseEntity&lt;PostDto&gt; updatePost(@RequestBody PostDto postDto,@PathVariable Integer postId)
+    {
+<span class="nc" id="L45">        PostDto updatedPost=this.postService.updatePost(postDto,postId);</span>
+<span class="nc" id="L46">        return new ResponseEntity&lt;PostDto&gt;(updatedPost,HttpStatus.OK);</span>
+    }
+
+    @DeleteMapping(&quot;/posts/{postId}&quot;)
+    public ApiResponse deletePost(@PathVariable Integer postId)
+    {
+<span class="nc" id="L52">        this.postService.deletePost(postId);</span>
+<span class="nc" id="L53">        return new ApiResponse(&quot;Post is successfully Deleted&quot;, true);</span>
+    }
+
+    @GetMapping(&quot;/posts/{postId}&quot;)
+    public ResponseEntity&lt;PostDto&gt;getPostById(@PathVariable Integer postId){
+<span class="nc" id="L58">        PostDto postDto=this.postService.getPostById(postId);</span>
+<span class="nc" id="L59">        return new ResponseEntity&lt;PostDto&gt;(postDto, HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;/user/{userId}/posts&quot;)
+    public ResponseEntity&lt;List&lt;PostDto&gt;&gt; getPostsByUser(@PathVariable Integer userId){
+<span class="nc" id="L64">        List&lt;PostDto&gt; posts=this.postService.getPostByUser(userId);</span>
+<span class="nc" id="L65">        return new ResponseEntity&lt;List&lt;PostDto&gt;&gt;(posts, HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;/category/{categoryId}/posts&quot;)
+    public ResponseEntity&lt;List&lt;PostDto&gt;&gt; getPostsByCategory(@PathVariable Integer categoryId){
+<span class="nc" id="L70">        List&lt;PostDto&gt; posts=this.postService.getPostsByCategory(categoryId);</span>
+<span class="nc" id="L71">        return new ResponseEntity&lt;List&lt;PostDto&gt;&gt;(posts, HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;/posts&quot;)
+    public ResponseEntity&lt;PostResponse&gt;getAllPost(
+            @RequestParam(value = &quot;pageNumber&quot;, defaultValue= AppConstants.PAGE_NUMBER, required=false) Integer pageNumber,
+            @RequestParam(value = &quot;pageSize&quot;,defaultValue =AppConstants.PAGE_SIZE,required = false) Integer pageSize,
+            @RequestParam(value=&quot;sortBy&quot;, defaultValue = AppConstants.SORT_BY,required = false) String sortBy,
+            @RequestParam(value=&quot;sortDir&quot;,defaultValue = AppConstants.SORT_DIR,required = false) String sortDir){
+<span class="nc" id="L80">        PostResponse postResponse=this.postService.getAllPost(pageNumber,pageSize,sortBy,sortDir);</span>
+<span class="nc" id="L81">        return new ResponseEntity&lt;PostResponse&gt;(postResponse, HttpStatus.OK);</span>
+    }
+
+    @GetMapping(&quot;/posts/search/{keywords}&quot;)
+    public ResponseEntity&lt;List&lt;PostDto&gt;&gt; searchByTitle(@PathVariable(&quot;keywords&quot;) String keywords){
+<span class="nc" id="L86">        List&lt;PostDto&gt; result=this.postService.searchPosts(keywords);</span>
+<span class="nc" id="L87">        return new ResponseEntity&lt;List&lt;PostDto&gt;&gt;(result, HttpStatus.OK);</span>
+    }
+    @PostMapping(&quot;/post/image/upload/{postId}&quot;)
+    public ResponseEntity&lt;PostDto&gt; uploadPostImage(@RequestParam(&quot;image&quot;)MultipartFile image, @PathVariable Integer postId) throws IOException {
+
+<span class="nc" id="L92">        PostDto postDto=this.postService.getPostById(postId);</span>
+<span class="nc" id="L93">        String fileName=this.fileService.uploadImage(path,image);</span>
+
+<span class="nc" id="L95">        postDto.setImageName(fileName);</span>
+<span class="nc" id="L96">        PostDto updatedPost=this.postService.updatePost(postDto,postId);</span>
+<span class="nc" id="L97">        return new ResponseEntity&lt;PostDto&gt;(updatedPost,HttpStatus.OK);</span>
+    }
+
+    @GetMapping(value=&quot;/post/image/{imageName}&quot;,produces= MediaType.IMAGE_JPEG_VALUE)
+    public void downloadImage(@PathVariable(&quot;imageName&quot;)String imageName, HttpServletResponse response) throws IOException{
+<span class="nc" id="L102">        InputStream resource = this.fileService.getResource(path,imageName);</span>
+<span class="nc" id="L103">        response.setContentType(MediaType.IMAGE_JPEG_VALUE);</span>
+<span class="nc" id="L104">        StreamUtils.copy(resource,response.getOutputStream());</span>
+<span class="nc" id="L105">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

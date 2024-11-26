@@ -5,8 +5,8 @@ This README provides a detailed overview of the testing process for the Blogging
 ## Table of Contents
 1. [Code Repository](#code-repository)
 2. [Testing Strategy](#testing-strategy)
-3. [Designed Test Cases](#designed-test-cases)
-4. [Testing Tools Used](#testing-tools-used)
+3. [Testing Tools Used](#testing-tools-used)
+4. [Designed Test Cases](#designed-test-cases)
 5. [Test Results and Screenshots](#test-results-and-screenshots)
 6. [Execution Instructions](#execution-instructions)
 
@@ -16,13 +16,25 @@ This README provides a detailed overview of the testing process for the Blogging
 
 The complete code repository used for testing can be accessed via the following link:
 
-[Complete Code Repository](https://github.com/your-repo-link)
+[Complete Code Repository](https://github.com/nikhilgupta221b/ST-ServerSideTesting)
 
 ---
 
 ## Testing Strategy
 
-The testing strategy for this project focuses on server-side service layer testing in the Spring application. The approach ensures that the core business logic is thoroughly tested for accuracy and reliability.
+The testing strategy for this project focuses on server-side controller layer and service layer testing in the Spring application. The approach ensures that the core business logic is thoroughly tested for accuracy and reliability also testing for controllers' working.
+
+---
+
+## Testing Tools Used
+
+The following tools were used to perform service-layer testing:
+
+- *JUnit 5*: For writing and running test cases.
+- *Mockito*: For mocking dependencies like repositories.
+- *JaCoCo*: For analyzing code coverage.
+
+---
 
 ### 1. Manual Modeling of Service Layer
 - *Component Interaction Model (CIM):*
@@ -48,7 +60,7 @@ We used *JaCoCo* to measure coverage for the service layer. The metrics include:
 - *Lines of Code*: Ensuring each line in the service layer is executed during testing.
 - *Branches*: Ensuring all branches in conditional logic are covered.
 - *Methods and Classes*: Ensuring each service method and class is tested.
-
+![image](https://github.com/user-attachments/assets/c0b77ae4-0352-482f-8b89-850de9926139)
 ---
 
 ## Designed Test Cases
@@ -65,13 +77,8 @@ Complete test case details and methodologies are documented in the test-cases di
 
 ---
 
-## Testing Tools Used
 
-The following tools were used to perform service-layer testing:
-
-- *JUnit 5*: For writing and running test cases.
-- *Mockito*: For mocking dependencies like repositories.
-- *JaCoCo*: For analyzing code coverage.
+  
 
 ---
 

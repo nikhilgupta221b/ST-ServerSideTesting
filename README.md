@@ -63,17 +63,124 @@ We used *JaCoCo* to measure coverage for the service layer. The metrics include:
 ![image](https://github.com/user-attachments/assets/c0b77ae4-0352-482f-8b89-850de9926139)
 ---
 
-## Designed Test Cases
+# Designed Test Cases
 
-The following test cases were designed for the service layer:
-1. *Create User*: Verify that a valid user can be created, persisted in the database, and returned as a response.
-2. *Update User*: Ensure existing user details can be updated successfully.
-3. *Get User by ID*: Validate the retrieval of a specific user by their unique ID.
-4. *Get All Users*: Confirm that the service can return a list of all users in the system.
-5. *Delete User*: Verify that a user can be successfully deleted and removed from the database.
-6. *Exception Handling*: Test cases to ensure proper handling of invalid IDs, empty inputs, and other edge cases.
+## Service Layer Test Cases
+
+
+
+
+### User
+
+#### 1. Create User
+- Validates successful user creation and handles server errors (`500`).
+- [Flow Diagram](./1.%20Create%20User%20ATG.png)
+
+#### 2. Update User
+- Tests user update functionality, missing user errors (`404`), and server errors (`500`).
+- [Flow Diagram](./2.%20Update%20User%20ATG.png)
+
+#### 3. Delete User
+- Ensures user deletion, handles non-existent user errors (`404`), and server errors (`500`).
+- [Flow Diagram](./3.%20Delete%20User%20ATG.png)
+
+#### 4. Get User by ID
+- Validates retrieval of a user by ID, missing user errors (`404`), and server errors (`500`).
+- [Flow Diagram](./4.%20Get%20User%20by%20Id%20ATG.png)
+
+#### 5. Get All Users
+- Confirms fetching all users and handles server errors (`500`).
+- [Flow Diagram](./5.%20Get%20all%20Users%20ATG.png)
+
+
+# Service Layer Test Cases
+
+<details>
+<summary><strong>Post</strong></summary>
+
+### 1. Create Post
+<details>
+<summary>Details</summary>
+
+- Validates successful post creation, user existence, category existence, and handles server errors (`500`).
+- [Flow Diagram](./1.%20Create%20Post%20ATG.png)
+
+</details>
+
+### 2. Update Post
+<details>
+<summary>Details</summary>
+
+- Tests post update functionality, validates post existence, category existence, and handles errors (`404`, `500`).
+- [Flow Diagram](./2.%20Update%20Post%20ATG.png)
+
+</details>
+
+### 3. Delete Post
+<details>
+<summary>Details</summary>
+
+- Ensures post deletion, validates post existence (`404`), and handles server errors (`500`).
+- [Flow Diagram](./3.%20Delete%20Post%20ATG.png)
+
+</details>
+
+### 4. Get Post by ID
+<details>
+<summary>Details</summary>
+
+- Validates retrieval of a specific post by ID, handles missing post errors (`404`), and server errors (`500`).
+- [Flow Diagram](./4.%20Get%20Post%20by%20Id%20ATG.png)
+
+</details>
+
+### 5. Get Posts by User
+<details>
+<summary>Details</summary>
+
+- Confirms fetching posts for a specific user, handles missing user errors (`404`), and server errors (`500`).
+- [Flow Diagram](./5.%20Get%20Post%20by%20User%20ATG.png)
+
+</details>
+
+### 6. Get Posts by Category
+<details>
+<summary>Details</summary>
+
+- Validates retrieval of posts under a category, handles missing category errors (`404`), and server errors (`500`).
+- [Flow Diagram](./6.%20Get%20Post%20By%20Category.png)
+
+</details>
+
+### 7. Search Posts by Title
+<details>
+<summary>Details</summary>
+
+- Ensures retrieval of posts matching a title keyword and handles server errors (`500`).
+- [Flow Diagram](./8.%20Search%20Post%20by%20Title%20ATG.png)
+
+</details>
+
+### 8. Get All Posts
+<details>
+<summary>Details</summary>
+
+- Confirms successful retrieval of all posts with pagination and handles server errors (`500`).
+- [Flow Diagram](./7.%20Get%20All%20Posts%20ATG.png)
+
+</details>
+
+</details>
+
+
+
+
 
 Complete test case details and methodologies are documented in the test-cases directory.
+
+
+
+
 
 ---
 

@@ -9,6 +9,7 @@ This README provides a detailed overview of the testing process used for server 
 4. [Test Results](#test-results)
 5. [Execution Instructions](#execution-instructions)
 6. [Designed Test Cases](#designed-test-cases)
+7. [Controller Testing](#controller-testing)
 
 ---
 
@@ -27,28 +28,29 @@ The following tools were used to perform server-side testing:
 - *JUnit 5*: For writing and running test cases.
 - *Mockito*: For mocking dependencies like repositories.
 - *JaCoCo*: For analyzing code coverage.
+- *Postman*: For testing controllers.
 
 ---
 
 # Testing Strategy
 
-The testing strategy for this project emphasizes comprehensive server-side testing of the service layer in the Spring Boot application. It ensures that the core business logic is thoroughly validated for accuracy, reliability, and seamless interaction with dependent components. The approach includes manual modeling, automated testing, and coverage analysis.
+The testing strategy for this project emphasizes comprehensive server-side testing of the service layer in the Spring Boot application. It ensures that the core business logic is thoroughly validated for accuracy, reliability, and seamless interaction with dependent components. The approach includes manual modeling, automated testing, and coverage analysis. Controllers accessibility and working is also tested for good intergration with client side applications.
 
-First CIM and ATG were made. Later using ATG, test cases were formed to cover all aspects of the graph. (All the graphs and designed test cases are shown in the last section of this page).
+First CIM and ATG were made. Later using ATG, test cases were formed to cover all aspects of the graph. (All the graphs and designed test cases are shown in the last section of this page). Based on the graphs, test cases were also created to test controllers using Postman.
 
-## 1. Manual Modeling of Service Layer
+## 1. Manual Modeling of different layers
 
 - **Component Interaction Model (CIM)**:
   - Represents interactions between the service layer and dependent components like repositories and external APIs.
   - Helps identify key dependencies and points of interaction for effective test case design.
 
 - **Application Transition Graph (ATG)**:
-  - Models state transitions in the service layer during critical operations.
+  - Models state transitions in the layers during critical operations.
   - Provides a visual representation of application flow to ensure complete test coverage.
 
-## 2. Test Case Design for Services
+## 2. Test Case Design
 
-Service layer testing focused on verifying the following aspects:
+Test designing focused on verifying the following aspects:
 
 - **Business Logic**:
   - Ensured that all service methods perform expected operations.
@@ -64,6 +66,9 @@ Service layer testing focused on verifying the following aspects:
 
 - **Boundary Cases**:
   - Designed test cases for edge scenarios like empty inputs, null values, and extremely large payloads.
+
+- **Controller Working**:
+  - Designed test cases in Postman to test working of controllers.
 
 ## 3. Coverage Analysis
 
@@ -120,8 +125,7 @@ Follow these steps to execute the tests and view the coverage report:
 
 1. *Run Tests*:
    - For Maven:
-     bash
-     mvn clean verify
+     mvn clean package
      
 2. *View Coverage Report*:
    - Maven: target/site/jacoco/index.html
@@ -536,3 +540,66 @@ Follow these steps to execute the tests and view the coverage report:
   ![image](https://github.com/user-attachments/assets/48ebc025-aa09-42b3-a6a2-138f7646a0d4)
 
 ---
+
+# Controller Testing
+
+  Here some of the testing results for controller testing are shown from each category.
+  
+  ## User
+
+  ### 1. Create User
+  ![image](https://github.com/user-attachments/assets/4daba604-5293-47c7-8c89-0b10dbd61fcb)
+
+  ### 2. Update User
+  ![image](https://github.com/user-attachments/assets/7cb7be1c-9fe9-4d0b-a741-d64cd1f4d800)
+
+  ### 3. Delete User
+  ![image](https://github.com/user-attachments/assets/96351dd1-4faa-4d04-9e79-73769a0fd092)
+  ![image](https://github.com/user-attachments/assets/279b8a59-8a0b-4567-885f-6f4dac0901c3)
+
+  ### 4. Get User by ID
+  ![image](https://github.com/user-attachments/assets/5db38747-a32f-4ca5-8aea-bb44715fd607)
+
+  ### 5. Get All Users
+  ![image](https://github.com/user-attachments/assets/c11cf023-0663-45d4-8b1f-fedda35bd843)
+
+
+
+  ## Post
+
+  ### 1. Create Post
+  ![image](https://github.com/user-attachments/assets/65008c3d-a807-4393-81c2-0b6de614b11b)
+  ![image](https://github.com/user-attachments/assets/1a448338-c38a-42ea-a6c2-7c6ff7ec5089)
+  ![image](https://github.com/user-attachments/assets/cae6a47a-f7dc-43d0-8667-22fbc68ed3f0)
+
+  ### 2. Update Post
+  
+  ![image](https://github.com/user-attachments/assets/d0c82803-1509-4ebc-b39d-f5684b8f02a5)
+
+  ### 3. Delete Post
+  ![image](https://github.com/user-attachments/assets/5ce7c401-563c-43fc-9cbe-db4e5e28cd44)
+
+  ### 4. Get Post by ID
+  ![image](https://github.com/user-attachments/assets/f830fc24-23e7-4ae9-99dd-167f5d45d312)
+
+  ### 5. Get All Posts
+  ![image](https://github.com/user-attachments/assets/21fc9054-7c16-4758-9bcd-babb216a2261)
+
+  ## Category
+
+  ### 1. Create Category
+  ![image](https://github.com/user-attachments/assets/9b873724-80e6-43f6-af79-1b65db6204e7)
+
+  ### 2. Update Category
+  ![image](https://github.com/user-attachments/assets/b1dffbc2-d073-47e9-aa30-238f46e46f8f)
+
+  ### 3. Delete Category
+  ![image](https://github.com/user-attachments/assets/66fa5e8e-40a6-4e99-b859-4f10e17dde5e)
+
+## Comment
+
+  ### 1. Create Comment
+  ![image](https://github.com/user-attachments/assets/86d0cf7c-e49a-449b-a16d-36aeac430f01)
+
+  ### 2. Delete Comment
+  ![image](https://github.com/user-attachments/assets/3d78cef2-0003-4dd4-bd4d-8d748d3bfea4)

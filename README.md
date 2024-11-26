@@ -34,7 +34,7 @@ The following tools were used to perform server-side testing:
 
 The testing strategy for this project emphasizes comprehensive server-side testing of the service layer in the Spring Boot application. It ensures that the core business logic is thoroughly validated for accuracy, reliability, and seamless interaction with dependent components. The approach includes manual modeling, automated testing, and coverage analysis.
 
-First CIM and ATG were made. Later using ATG, test cases were formed to cover all aspects of the graph.
+First CIM and ATG were made. Later using ATG, test cases were formed to cover all aspects of the graph. (All the graphs and designed test cases are shown in the last section of this page).
 
 ## 1. Manual Modeling of Service Layer
 

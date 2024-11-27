@@ -65,7 +65,9 @@ public class CommentServiceTest {
         when(modelMapper.map(any(CommentDto.class), eq(Comment.class))).thenReturn(comment);
         when(commentRepository.save(any(Comment.class))).thenReturn(comment);
         when(modelMapper.map(any(Comment.class), eq(CommentDto.class))).thenReturn(commentDto);
+
         CommentDto createdComment = commentService.createComment(commentDto, 1);
+
         assertNotNull(createdComment);
         assertEquals(commentDto.getId(), createdComment.getId());
         assertEquals(commentDto.getContent(), createdComment.getContent());

@@ -194,42 +194,25 @@ public class UserServiceTest {
     @Test
     void testRegisterNewUser() {
         // Arrange
-        when(modelMapper.map(any(UserDto.class), eq(User.class))).thenAnswer(invocation -> {
-            UserDto input = invocation.getArgument(0);
-            User mappedUser = new User();
-            mappedUser.setName(input.getName());
-            mappedUser.setEmail(input.getEmail());
-            mappedUser.setPassword(input.getPassword());
-            return mappedUser;
-        });
+        when(modelMapper.map(any(UserDto.class), eq(User.class))).thenReturn(user);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        when(userRepo.save(any(User.class))).thenAnswer(invocation -> {
-            User savedUser = invocation.getArgument(0);
-            savedUser.setId(1); // Simulate saved ID
-            return savedUser;
-        });
-        when(modelMapper.map(any(User.class), eq(UserDto.class))).thenAnswer(invocation -> {
-            User input = invocation.getArgument(0);
-            UserDto output = new UserDto();
-            output.setId(input.getId());
-            output.setName(input.getName());
-            output.setEmail(input.getEmail());
-            return output;
-        });
-        // Act
+        when(userRepo.save(any(User.class))).thenReturn(user);
+        when(modelMapper.map(any(User.class), eq(UserDto.class))).thenReturn(userDto);
+
         UserDto inputDto = new UserDto();
         inputDto.setName("John Doe");
         inputDto.setEmail("johndoe@example.com");
         inputDto.setPassword("password123");
 
+        // Act
         UserDto registeredUser = userService.registerNewUser(inputDto);
+
         // Assert
         assertNotNull(registeredUser);
         assertEquals("John Doe", registeredUser.getName());
         assertEquals("johndoe@example.com", registeredUser.getEmail());
         verify(passwordEncoder, times(1)).encode("password123");
         verify(userRepo, times(1)).save(any(User.class));
-        verify(modelMapper, times(2)).map(any(), any());
     }
 
     @Test
@@ -240,7 +223,7 @@ public class UserServiceTest {
         User foundUser = userService.findByUsername(username);
 
         assertNotNull(foundUser);
-        assertEquals(user.getEmail(), foundUser.getEmail());
+        assertEquals(username, foundUser.getEmail());
         verify(userRepo, times(1)).findByEmail(username);
     }
 

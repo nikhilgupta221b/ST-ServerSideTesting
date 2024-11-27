@@ -28403,3 +28403,18 @@ java.nio.file.NoSuchFileException: back\images\c77b049e-c1fd-4e53-98b7-f577bae49
 2024-11-27 13:48:47 INFO  UserImplementation:74 - User retrieved successfully with ID: 1
 2024-11-27 13:48:47 DEBUG UserImplementation:111 - Converted User to UserDto: johndoe@example.com
 2024-11-27 13:48:47 INFO  UserImplementation:46 - New user registered successfully: johndoe@example.com
+2024-11-27 13:58:14 INFO  UserImplementation:124 - User added successfully: johndoe@example.com
+2024-11-27 13:58:14 DEBUG UserImplementation:111 - Converted User to UserDto: johndoe@example.com
+2024-11-27 13:58:14 INFO  UserImplementation:82 - All users retrieved successfully
+2024-11-27 13:58:14 INFO  UserImplementation:67 - User updated successfully: johndoe@example.com
+2024-11-27 13:58:14 DEBUG UserImplementation:111 - Converted User to UserDto: johndoe@example.com
+2024-11-27 13:58:14 INFO  UserImplementation:99 - User found by username: johndoe@example.com
+2024-11-27 13:58:14 DEBUG UserImplementation:105 - Converted UserDto to User: johndoe@example.com
+2024-11-27 13:58:14 INFO  UserImplementation:54 - User created successfully: johndoe@example.com
+2024-11-27 13:58:14 DEBUG UserImplementation:111 - Converted User to UserDto: johndoe@example.com
+2024-11-27 13:58:14 INFO  UserImplementation:117 - Admin list retrieved successfully
+2024-11-27 13:58:14 INFO  UserImplementation:90 - User deleted successfully with ID: 1
+2024-11-27 13:58:14 DEBUG UserImplementation:105 - Converted UserDto to User: johndoe@example.com
+2024-11-27 13:58:14 INFO  UserImplementation:74 - User retrieved successfully with ID: 1
+2024-11-27 13:58:14 DEBUG UserImplementation:111 - Converted User to UserDto: johndoe@example.com
+2024-11-27 13:58:14 INFO  UserImplementation:46 - New user registered successfully: johndoe@example.com
